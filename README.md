@@ -12,23 +12,27 @@ You specify the name of the audio source, such as Built-in Digital Output, and t
 
 This is a command-line utility only and has no graphical user interface.  Works with Mac OS 10.7 Lion and 10.8 Mountain Lion.
 
-Installing Xcode Command Line Tools
+Requirements & Installation
 -----------------------------------
-switchaudio-osx requires command line tools to be installed from OS X. To install command line tools in Xcode 4.4, from the menubar go to Xcode > Preferences and click the Downloads tab. Click "Install" on the line that reads "Command Line Tools". 
+switchaudio-osx requires a full installation of Xcode (Command Line Tools are not sufficient) in order to compile on MacOSX. 
+
+Once Xcode is installed, you may decide to compile the program manually or use homebrew to compile it. A homebrew formula is included, and it can be installed as follows:
+
+    brew install --HEAD https://raw.githubusercontent.com/retrography/switchaudio-osx/master/homebrew/switchaudio-osx.rb
 
 Usage
 -----
 
-AudioSwitcher [-a] [-c] [-t type] [-n] -s device_name  
+SwitchAudioSource [-a] [-c] [-t type] [-n] -s device_name  
 or  
-AudioSwitcher -e device_id1=0.5,0.5:device_id2=0.7,0.8
+SwitchAudioSource -e device_id1=0.5,0.5:device_id2=0.7,0.8
 
- - **-a**               : Shows all devices.
+ - **-a**               : Lists all devices along with their device IDs.
  - **-c**               : Shows current device.
- - **-t** _type_        : device type (input/output/system). Defaults to output.
+ - **-t** _type_        : Device type (input/output/system). Defaults to output.
  - **-n**               : Cycles the audio device to the next one.
  - **-s** _device_name_ : Sets the audio device to the given device by name.
- - **-e** _device_id1_=_vol1_,_vol2_:_device_id2_=_vol1_,_vol2_ : Sets the volume of audio device given by id, followed by volume of first and second channel respectively. Multiple device can be separated with colon.
+ - **-e** _device_id1_=_vol1_,_vol2_:_device_id2_=_vol1_,_vol2_ : Sets the volume of audio device given by ID, followed by volume of first and second channel respectively. Multiple device can be separated with colon.
 
 
 Thanks
