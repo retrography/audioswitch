@@ -38,9 +38,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 void showUsage(const char * appName) {
   printf("Usage: %s [-a] [-c] [-t type] [-n] -s device_name\n"
       "  -a     : shows all devices\n"
-      "  -c     : shows current device\n\n"
-
-      "  -t type  : device type (input/output/system).  Defaults to output.\n"
+      "  -c     : shows current device\n"
+      "  -t type  : device type (input/output/system).  Defaults to all.\n"
       "  -n     : cycles the audio device to the next one\n"
       "  -s device_name : sets the audio device to the given device by name\n"
       "  -e device_id1=vol1,vol2:device_id2=vol1,vol2 : sets audio device volume for 1st and 2nd channel. Multiple device can be separated with ':'.\n\n", appName);
