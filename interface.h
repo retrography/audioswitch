@@ -1,10 +1,11 @@
 /*
- *  audio_switch.h
- *  AudioSwitcher
+ *  interface.h
+ *  AudioSwitch
  *
 
 Copyright (c) 2008 Devon Weller <wellerco@gmail.com>
 Copyright (c) 2015 Ziga Zupanec <ziga.zupanec@gmail.com>
+Copyright (c) 2016 Mahmood S. Zargar <mahmood@gmail.com>
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -29,39 +30,20 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-#include <unistd.h>
 #include <CoreServices/CoreServices.h>
 #include <CoreAudio/CoreAudio.h>
-#include <CoreAudio/AudioHardwareBase.h>
+#include "device.h"
 
-typedef enum {
-  kAudioTypeUnknown = 0,
-  kAudioTypeInput   = 1,
-  kAudioTypeOutput  = 2,
-  kAudioTypeSystemOutput = 3
-} ASDeviceType;
+#ifndef __INTERFACE_H_INCLUDED__   // if x.h hasn't been included yet...
+#define __INTERFACE_H_INCLUDED__   //   #define this so the compiler knows it has been included
 
-enum {
-  kFunctionSetDevice   = 1,
-  kFunctionShowHelp  = 2,
-  kFunctionShowAll   = 3,
-  kFunctionShowCurrent = 4,
-  kFunctionCycleNext   = 5,
-  kFunctionSetVolume   = 6
-};
+#define VOL_ARG_LEN 1024
+#define VOL_DELIMITERS "=,:"
 
-void showUsage(const char * appName);
-int runAudioSwitch(int argc, const char * argv[]);
 void printProperties(AudioDeviceID deviceID, ASDeviceType device_type);
-AudioDeviceID getCurrentlySelectedDeviceID(ASDeviceType typeRequested);
-void getDeviceName(AudioDeviceID deviceID, char * deviceName);
-ASDeviceType getDeviceType(AudioDeviceID deviceID);
-bool isAnInputDevice(AudioDeviceID deviceID);
-bool isAnOutputDevice(AudioDeviceID deviceID);
-char *deviceTypeName(ASDeviceType device_type);
-void showCurrentlySelectedDeviceID(ASDeviceType typeRequested);
-AudioDeviceID getRequestedDeviceID(char * requestedDeviceName, ASDeviceType typeRequested);
-AudioDeviceID getNextDeviceID(AudioDeviceID currentDeviceID, ASDeviceType typeRequested);
-void setDevice(AudioDeviceID newDeviceID, ASDeviceType typeRequested);
-void showAllDevices(ASDeviceType typeRequested);
-void setDeviceVolume(AudioDeviceID deviceID, float vol_left, float vol_right);
+
+void showUsage(const char *appName);
+
+int runAudioSwitch(int argc, const char *argv[]);
+
+#endif // __INTERFACE_H_INCLUDED__
