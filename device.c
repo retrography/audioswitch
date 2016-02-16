@@ -406,13 +406,3 @@ void setDevice(AudioDeviceID newDeviceID, ASDeviceType typeRequested) {
     AudioObjectSetPropertyData(kAudioObjectSystemObject, &pa, 0, NULL, propertySize, &newDeviceID);
 }
 
-void showAllDevices(ASDeviceType typeRequested) {
-    AudioDeviceID dev_array[64];
-    int numberOfDevices = 0;
-
-    numberOfDevices = getNumberOfDevices(dev_array);
-
-    for (int i = 0; i < numberOfDevices; ++i) {
-        printProperties(dev_array[i], typeRequested);
-    }
-}

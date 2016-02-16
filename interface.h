@@ -46,4 +46,6 @@ void showUsage(const char *appName);
 
 int runAudioSwitch(int argc, const char *argv[]);
 
+void showAllDevices(ASDeviceType typeRequested);
+
 #endif // __INTERFACE_H_INCLUDED__

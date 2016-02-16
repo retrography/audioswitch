@@ -81,6 +81,7 @@ void printProperties(AudioDeviceID deviceID, ASDeviceType typeRequested) {
     }
 }
 
+// TODO: Cleanup the switch mess, separate channel volume from overall, support multichannel, switch bit depth and sample rate
 void showUsage(const char *appName) {
     printf("Usage: %s [-a] [-c] [-t type] [-n] -s device_name\n"
                    "  -a     : shows all devices\n"
@@ -249,4 +250,15 @@ int runAudioSwitch(int argc, const char *argv[]) {
     printf("%s audio device set to \"%s\"\n", deviceTypeName(typeRequested), requestedDeviceName);
     return 0;
 
+}
+
+void showAllDevices(ASDeviceType typeRequested) {
+    AudioDeviceID dev_array[64];
+    int numberOfDevices = 0;
+
+    numberOfDevices = getNumberOfDevices(dev_array);
+
+    for (int i = 0; i < numberOfDevices; ++i) {
+        printProperties(dev_array[i], typeRequested);
+    }
 }

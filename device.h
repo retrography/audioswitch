@@ -40,6 +40,14 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 #define DEVICE_NAME_LEN 256
 
+struct Device {
+    int id;
+    float volLeft, volRight, sampleRate, bitDepth;
+    bool hogSupport, hogged;
+};
+
+typedef struct Device Device;
+
 typedef enum {
     kAudioTypeUnknown = 0,
     kAudioTypeInput = 1,
@@ -76,8 +84,6 @@ AudioDeviceID getNextDeviceID(AudioDeviceID currentDeviceID, ASDeviceType typeRe
 
 void setDevice(AudioDeviceID newDeviceID, ASDeviceType typeRequested);
 
-void showAllDevices(ASDeviceType typeRequested);
-
 void setDeviceVolume(AudioDeviceID deviceID, float vol_left, float vol_right);
 
 void getDeviceVolume(AudioDeviceID deviceID, float *vol_left, float *vol_right);
@@ -85,5 +91,7 @@ void getDeviceVolume(AudioDeviceID deviceID, float *vol_left, float *vol_right);
 void getAggregateDeviceSubDeviceList(AudioDeviceID deviceID, AudioObjectID *sub_device, UInt32 *outSize);
 
 void getDeviceTransportType(AudioDeviceID deviceID, AudioDevicePropertyID *transportType);
+
+UInt32 getNumberOfDevices(AudioDeviceID *dev_array);
 
 #endif // __DEVICE_H_INCLUDED__
