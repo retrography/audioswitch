@@ -16,7 +16,7 @@ Requirements & Installation
 -----------------------------------
 AudioSwitch requires `cmake` to build.
 
-    brew install --HEAD https://raw.githubusercontent.com/retrography/homebrew-tap/audioswitch.rb
+    brew install --HEAD https://raw.githubusercontent.com/retrography/homebrew-tap/master/audioswitch.rb
 
 Usage
 -----
