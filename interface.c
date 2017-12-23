@@ -33,7 +33,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include "device.h"
 #include "interface.h"
 
-void printProperties(AudioDeviceID deviceID, ASDeviceType typeRequested) {
+void printProperties(AudioDeviceID deviceID, ASDeviceType typeRequested, ASOutputFormat outputFormat) {
     char deviceName[DEVICE_NAME_LEN];
     float vol_left, vol_right;
     ASDeviceType device_type;
@@ -60,25 +60,32 @@ void printProperties(AudioDeviceID deviceID, ASDeviceType typeRequested) {
 
     getDeviceName(deviceID, deviceName);
     getDeviceVolume(deviceID, &vol_left, &vol_right);
-
-    printf("[%3u] - %6s %-26s", (unsigned int) deviceID, deviceTypeName(device_type), deviceName);
-    if (vol_left < -0.1 || vol_right < -0.1) {
-        printf("\n");
-    }
-    else {
-        printf(" :: [%.3f:%.3f]\n", vol_left, vol_right);
-    }
-
     getDeviceTransportType(deviceID, &transportType);
-    if (transportType == kAudioDeviceTransportTypeAggregate) {
-        AudioObjectID sub_device[32];
-        UInt32 outSize = sizeof(sub_device);
-        getAggregateDeviceSubDeviceList(deviceID, sub_device, &outSize);
-        for (int j = 0; j < outSize / sizeof(AudioObjectID); j++) {
+
+    switch (outputFormat) {
+      case kOutputFormatName:
+        printf("%s\n", deviceName);
+        break;
+      default:
+        printf("[%3u] - %6s %-26s", (unsigned int) deviceID, deviceTypeName(device_type), deviceName);
+        if (vol_left < -0.1 || vol_right < -0.1) {
+          printf("\n");
+        }
+        else {
+          printf(" :: [%.3f:%.3f]\n", vol_left, vol_right);
+        }
+
+        if (transportType == kAudioDeviceTransportTypeAggregate) {
+          AudioObjectID sub_device[32];
+          UInt32 outSize = sizeof(sub_device);
+          getAggregateDeviceSubDeviceList(deviceID, sub_device, &outSize);
+          for (int j = 0; j < outSize / sizeof(AudioObjectID); j++) {
             printf("\t");
-            printProperties(sub_device[j], device_type);
+            printProperties(sub_device[j], device_type, outputFormat);
+          }
         }
     }
+
 }
 
 void showUsage(const char *appName) {
@@ -86,6 +93,7 @@ void showUsage(const char *appName) {
                    "  -a     : shows all devices\n"
                    "  -c     : shows current device\n"
                    "  -t type  : device type (input/output/system).  Defaults to all.\n"
+                   "  -f format : output format (name/full).  Defaults to full.\n"
                    "  -n     : cycles the audio device to the next one\n"
                    "  -s device_name : sets the audio device to the given device by name\n"
                    "  -e device_id1=vol1,vol2:device_id2=vol1,vol2 : sets audio device volume for 1st and 2nd channel. Multiple device can be separated with ':'.\n\n",
@@ -97,10 +105,11 @@ int runAudioSwitch(int argc, const char *argv[]) {
     char volume_arg[VOL_ARG_LEN];
     AudioDeviceID chosenDeviceID = kAudioDeviceUnknown;
     ASDeviceType typeRequested = kAudioTypeUnknown;
+    ASOutputFormat outputFormat = kOutputFormatDefault;
     int function = 0;
 
     int c;
-    while ((c = getopt(argc, (char **) argv, "hacnt:s:e:")) != -1) {
+    while ((c = getopt(argc, (char **) argv, "hacnf:t:s:e:")) != -1) {
         switch (c) {
             case 'a':
                 // show all
@@ -133,6 +142,21 @@ int runAudioSwitch(int argc, const char *argv[]) {
                 strncpy(requestedDeviceName, optarg, DEVICE_NAME_LEN);
                 break;
 
+            case 'f':
+                // set the output format
+                if (strcmp(optarg, "full") == 0) {
+                    outputFormat = kOutputFormatDefault;
+                }
+                else if (strcmp(optarg, "name") == 0) {
+                    outputFormat = kOutputFormatName;
+                }
+                else {
+                    printf("Invalid output format \"%s\" specified.\n", optarg);
+                    showUsage(argv[0]);
+                    return 1;
+                }
+                break;
+
             case 't':
                 // set the requestedDeviceName
                 if (strcmp(optarg, "input") == 0) {
@@ -157,14 +181,14 @@ int runAudioSwitch(int argc, const char *argv[]) {
         switch (typeRequested) {
             case kAudioTypeInput:
             case kAudioTypeOutput:
-                showAllDevices(typeRequested);
+                showAllDevices(typeRequested, outputFormat);
                 break;
             case kAudioTypeSystemOutput:
-                showAllDevices(kAudioTypeOutput);
+                showAllDevices(kAudioTypeOutput, outputFormat);
                 break;
             default:
-                showAllDevices(kAudioTypeInput);
-                showAllDevices(kAudioTypeOutput);
+                showAllDevices(kAudioTypeInput, outputFormat);
+                showAllDevices(kAudioTypeOutput, outputFormat);
         }
         return 0;
     }
@@ -174,7 +198,7 @@ int runAudioSwitch(int argc, const char *argv[]) {
     }
     if (function == kFunctionShowCurrent) {
         if (typeRequested == kAudioTypeUnknown) typeRequested = kAudioTypeOutput;
-        showCurrentlySelectedDeviceID(typeRequested);
+        showCurrentlySelectedDeviceID(typeRequested, outputFormat);
         return 0;
     }
     if (function == kFunctionSetVolume) {

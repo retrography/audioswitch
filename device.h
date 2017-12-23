@@ -47,6 +47,11 @@ typedef enum {
     kAudioTypeSystemOutput = 3
 } ASDeviceType;
 
+typedef enum {
+  kOutputFormatDefault = 0,
+  kOutputFormatName = 1
+} ASOutputFormat;
+
 enum {
     kFunctionSetDevice = 1,
     kFunctionShowHelp = 2,
@@ -68,7 +73,7 @@ bool isAnOutputDevice(AudioDeviceID deviceID);
 
 char *deviceTypeName(ASDeviceType device_type);
 
-void showCurrentlySelectedDeviceID(ASDeviceType typeRequested);
+void showCurrentlySelectedDeviceID(ASDeviceType typeRequested, ASOutputFormat outputFormat);
 
 AudioDeviceID getRequestedDeviceID(char *requestedDeviceName, ASDeviceType typeRequested);
 
@@ -76,7 +81,7 @@ AudioDeviceID getNextDeviceID(AudioDeviceID currentDeviceID, ASDeviceType typeRe
 
 void setDevice(AudioDeviceID newDeviceID, ASDeviceType typeRequested);
 
-void showAllDevices(ASDeviceType typeRequested);
+void showAllDevices(ASDeviceType typeRequested, ASOutputFormat outputFormat);
 
 void setDeviceVolume(AudioDeviceID deviceID, float vol_left, float vol_right);
 
