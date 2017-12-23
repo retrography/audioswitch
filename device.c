@@ -287,11 +287,11 @@ bool hasSubdevices(AudioDevicePropertyID device_type) {
     }
 }
 
-void showCurrentlySelectedDeviceID(ASDeviceType typeRequested) {
+void showCurrentlySelectedDeviceID(ASDeviceType typeRequested, ASOutputFormat outputFormat) {
     AudioDeviceID currentDeviceID = kAudioDeviceUnknown;
     currentDeviceID = getCurrentlySelectedDeviceID(typeRequested);
 
-    printProperties(currentDeviceID, typeRequested);
+    printProperties(currentDeviceID, typeRequested, outputFormat);
 }
 
 UInt32 getNumberOfDevices(AudioDeviceID *dev_array) {
@@ -406,13 +406,13 @@ void setDevice(AudioDeviceID newDeviceID, ASDeviceType typeRequested) {
     AudioObjectSetPropertyData(kAudioObjectSystemObject, &pa, 0, NULL, propertySize, &newDeviceID);
 }
 
-void showAllDevices(ASDeviceType typeRequested) {
+void showAllDevices(ASDeviceType typeRequested, ASOutputFormat outputFormat) {
     AudioDeviceID dev_array[64];
     int numberOfDevices = 0;
 
     numberOfDevices = getNumberOfDevices(dev_array);
 
     for (int i = 0; i < numberOfDevices; ++i) {
-        printProperties(dev_array[i], typeRequested);
+        printProperties(dev_array[i], typeRequested, outputFormat);
     }
 }

@@ -40,7 +40,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #define VOL_ARG_LEN 1024
 #define VOL_DELIMITERS "=,:"
 
-void printProperties(AudioDeviceID deviceID, ASDeviceType device_type);
+void printProperties(AudioDeviceID deviceID, ASDeviceType device_type, ASOutputFormat outputFormat);
 
 void showUsage(const char *appName);
 
